@@ -3,10 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const userRouters = express.Router();
 
-userRouters.get("/", async (req, res) => {
+userRouters.get("/",authMiddleware, async (req, res) => {
 
     try {
         const user = await User.find();
@@ -78,13 +79,12 @@ userRouters.post("/login", async (req, res) => {
                 id: user._id,
                 email: user.email,
             },
-            "3e009e890d8fac816adfc9bef588c83f20ed3393b7c5c59a5865e1710f49ae20",
+            process.env.JWT_SECRET,
             {
                 expiresIn: "1d",
             }
         );
 
-        console.log(token)
 
         res.json({
             message: "Login successful",
@@ -103,6 +103,30 @@ userRouters.post("/login", async (req, res) => {
 
 
 })
+
+userRouters.get("/profile", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.json({
+            message: error.message,
+        })
+    }
+})
+
+userRouters.post("/logout", (req, res) => {
+    res.json({
+        message: "Logout successful"
+    });
+});
 
 
 userRouters.post("/", async (req, res) => {
