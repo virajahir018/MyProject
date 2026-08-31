@@ -7,18 +7,6 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const userRouters = express.Router();
 
-userRouters.get("/",authMiddleware, async (req, res) => {
-
-    try {
-        const user = await User.find();
-
-        res.json(user);
-    } catch (error) {
-        res.json({
-            message: error.message
-        })
-    }
-})
 
 userRouters.post("/register", async (req, res) => {
     try {
@@ -127,43 +115,5 @@ userRouters.post("/logout", (req, res) => {
         message: "Logout successful"
     });
 });
-
-
-userRouters.post("/", async (req, res) => {
-
-    try {
-        const user = await User.create(req.body);
-        res.json(user);
-    } catch (error) {
-        res.json({
-            message: error.message
-        })
-    }
-})
-
-userRouters.put("/:id", async (req, res) => {
-
-    try {
-        const user = await User.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {
-                new: true,
-                runValidators: true,
-            }
-        );
-
-        if (!user) {
-            res.json({
-                message: "USer not Found",
-            })
-        }
-        res.status(201).json(user);
-    } catch (error) {
-        res.json({
-            message: error.message,
-        })
-    }
-})
 
 module.exports = userRouters;
