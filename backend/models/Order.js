@@ -15,18 +15,23 @@ const orderSchema = new mongoose.Schema({
                 required: true
             },
 
+            price: {
+                type: Number,
+                required: true,
+            },
+
             quantity: {
                 type: Number,
                 required: true,
                 min: 1
-            },
-
-            price: {
-                type: Number,
-                required: true,
             }
         }
     ],
+
+    totalPrice: {
+        type: Number,
+        required: true
+    },
 
     status: {
         type: String,
@@ -44,3 +49,7 @@ const orderSchema = new mongoose.Schema({
         timestamps: true
     }
 )
+
+const Order = mongoose.model("Order", orderSchema)
+
+module.exports = Order;

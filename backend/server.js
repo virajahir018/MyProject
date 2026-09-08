@@ -7,6 +7,7 @@ const productRoutes = require("./routes/productRoutes");
 const userRouters = require("./routes/userRoutes");
 const userorderRoutes = require("./routes/userorderRoutes");
 const cartRouters = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 const port = 3000;
@@ -17,6 +18,7 @@ app.use("/api/products", productRoutes)
 app.use("/api/users", userRouters)
 app.use("/api/order", userorderRoutes)
 app.use("/api/cart", cartRouters)
+app.use("/order", orderRoutes)
 
 connectDB();
 

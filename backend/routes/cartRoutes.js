@@ -31,6 +31,7 @@ cartRouters.post("/add", authMiddleware, async (req, res) => {
                     },
                 ],
             });
+            
             return res.json(cart)
         }
 
@@ -194,4 +195,5 @@ cartRouters.delete("/clear", authMiddleware, async (req, res) => {
         });
     }
 });
+
 module.exports = cartRouters;
