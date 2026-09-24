@@ -1,9 +1,11 @@
 const express = require("express");
 const Product = require("../models/Product");
+const Admin = require("../middleware/admin");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const productRoutes = express.Router();
 
-productRoutes.get("/", async (req, res) => {
+productRoutes.get("/all", async (req, res) => {
     try {
         const product = await Product.find();
 
@@ -15,11 +17,14 @@ productRoutes.get("/", async (req, res) => {
     }
 })
 
-productRoutes.post("/", async (req, res) => {
+productRoutes.post("/create", Admin, async (req, res) => {
     try {
         const product = await Product.create(req.body);
 
-        res.json(product);
+        res.json({
+            message: "Product created successfully",
+            product
+        });
     } catch (error) {
         res.json({
             message: error.message,
@@ -27,7 +32,7 @@ productRoutes.post("/", async (req, res) => {
     }
 })
 
-productRoutes.put("/:id", async (req, res) => {
+productRoutes.put("/update/:id", Admin, async (req, res) => {
     try {
 
         const product = await Product.findByIdAndUpdate(
@@ -53,7 +58,7 @@ productRoutes.put("/:id", async (req, res) => {
     }
 })
 
-productRoutes.delete("/:id", async (req, res) => {
+productRoutes.delete("/delete/:id", Admin, async (req, res) => {
     try {
 
         const product = await Product.findByIdAndDelete(req.params.id,);
@@ -64,7 +69,10 @@ productRoutes.delete("/:id", async (req, res) => {
             })
         }
 
-        res.json(product);
+        res.json({
+            message: "Product deleted successfully",
+            product
+        });
     } catch (error) {
         res.json({
             message: error.message,

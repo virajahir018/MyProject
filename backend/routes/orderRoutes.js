@@ -3,6 +3,7 @@ const express = require("express");
 const authMiddleware = require("../middleware/authMiddleware");
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
+const Admin = require("../middleware/admin");
 
 const orderRoutes = express.Router();
 
@@ -66,12 +67,14 @@ orderRoutes.post("/create", authMiddleware, async (req, res) => {
     }
 })
 
-orderRoutes.get("/all", authMiddleware, async (req, res) => {
+orderRoutes.get("/all", Admin, async (req, res) => {
     try {
         const orders = await Order.find()
             .populate("user", "-password")
             .populate("products.product")
             .sort({ createdAt: -1 });
+
+            console.log(orders.user)
 
         res.status(200).json({
             message: "All orders fetched successfully",
@@ -173,6 +176,5 @@ orderRoutes.put("/:id/cancel", authMiddleware, async (req, res) => {
         });
     }
 });
-
 
 module.exports = orderRoutes;

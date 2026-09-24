@@ -21,37 +21,19 @@ cartRouters.post("/add", authMiddleware, async (req, res) => {
             user: req.user.id
         })
 
-        if (!cart) {
-            cart = await Cart.create({
-                user: req.user.id,
-                items: [
-                    {
-                        product: productId,
-                        quantity: quantity || 1,
-                    },
-                ],
-            });
-            
-            return res.json(cart)
-        }
 
-        const existingItem = cart.items.find(
-            (item) => item.product.toString() === productId
-        );
+        cart = await Cart.create({
+            user: req.user.id,
+            items: [
+                {
+                    product: productId,
+                    quantity: quantity || 1,
+                },
+            ],
+        });
 
-        if (existingItem) {
-            existingItem.quantity += quantity || 1;
-        } else {
-            cart.items.push({
-                product: productId,
-                quantity: quantity || 1,
-            });
-        }
-
-        await cart.save();
-
-        res.json(cart);
-
+        return res.json(cart)
+        
     } catch (error) {
         res.json({
             message: error.message,
